@@ -1,0 +1,42 @@
+services:
+  app_server1:
+    build: .
+    container_name: app_server1
+    environment:
+      SERVER_NAME: app_server1
+      PORT: 8001
+    ports:
+      - "8001:8001"
+    command: ["python", "app_server.py", "--nome", "app_server1", "--porta", "8001"]
+
+  app_server2:
+    build: .
+    container_name: app_server2
+    environment:
+      SERVER_NAME: app_server2
+      PORT: 8002
+    ports:
+      - "8002:8002"
+    command: ["python", "app_server.py", "--nome", "app_server2", "--porta", "8002"]
+
+  app_server3:
+    build: .
+    container_name: app_server3
+    environment:
+      SERVER_NAME: app_server3
+      PORT: 8003
+    ports:
+      - "8003:8003"
+    command: ["python", "app_server.py", "--nome", "app_server3", "--porta", "8003"]
+
+  nginx_proxy:
+    image: nginx:alpine
+    container_name: nginx_proxy
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - app_server1
+      - app_server2
+      - app_server3
